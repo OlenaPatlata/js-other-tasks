@@ -325,13 +325,12 @@ class FrontendLab{
     }
     addHomeworkResults(hwRes) {
         const copyHwRes = [...hwRes.results]
-        const titlTems=hwRes.topic
-        this.#studentsList.forEach(obj => {
-			obj.homeWorkStudent = []
-			console.log(obj.homeWorkStudent);
-            copyHwRes.forEach(student => {
+        const titleTems=hwRes.topic
+		this.#studentsList.forEach(obj => {
+			obj.homeWorkStudent ??= []
+			copyHwRes.forEach(student => {
                 if (student.email === obj.email) {
-				return obj.homeWorkStudent.push({ topic:titlTems, success:student.success })
+				return obj.homeWorkStudent.push({ topic:titleTems, success:student.success })
 				}
         })
         return obj.homeWorkStudent
@@ -345,7 +344,11 @@ class FrontendLab{
 		});
     }
     printStudentsEligibleForTest() {
-        
+		this.#studentsList.forEach(obj => {
+			const { name, email, homeWorkStudent } = obj;
+			homeWorkStudent.reduce((acc, item) => (item.success !== true) ? acc += 1 : acc, 0);
+			return obj.acc <= this.#failedHomeworksLimit? console.log((`name: ${name}, email: ${email}`))  : 0
+		});
     }
 
 }
@@ -353,4 +356,6 @@ const lab = new FrontendLab(listOfStudents, 1);
 
 lab.addHomeworkResults(homeworkResults[0])
 lab.addHomeworkResults(homeworkResults[1])
+lab.addHomeworkResults(homeworkResults[2])
 lab.printStudentsList()
+lab.printStudentsEligibleForTest()
