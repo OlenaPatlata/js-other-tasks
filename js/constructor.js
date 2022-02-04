@@ -342,20 +342,22 @@ class FrontendLab{
 			console.log((`name: ${name}, email: ${email}`));
 			console.log(homeWorkStudent);
 		});
-    }
+	}
+	
     printStudentsEligibleForTest() {
-		this.#studentsList.forEach(obj => {
-			const { name, email, homeWorkStudent } = obj;
-			homeWorkStudent.reduce((acc, item) => (item.success !== true) ? acc += 1 : acc, 0);
-			return obj.acc <= this.#failedHomeworksLimit? console.log((`name: ${name}, email: ${email}`))  : 0
+		this.#studentsList.forEach(({ name, email, homeWorkStudent }) => {
+			if (homeWorkStudent.reduce((acc, item) => (!item.success)?acc+=1 :acc,0) <= this.#failedHomeworksLimit) {
+				console.log(`name: ${name}, email: ${email}`)
+			}
 		});
-    }
-
+	}
 }
 const lab = new FrontendLab(listOfStudents, 1);
 
 lab.addHomeworkResults(homeworkResults[0])
 lab.addHomeworkResults(homeworkResults[1])
 lab.addHomeworkResults(homeworkResults[2])
+lab.addHomeworkResults(homeworkResults[3])
+lab.addHomeworkResults(homeworkResults[4])
 lab.printStudentsList()
 lab.printStudentsEligibleForTest()
